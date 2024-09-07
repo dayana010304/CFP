@@ -1,20 +1,10 @@
-IdProduct1;ProductName1;10
-IdProduct2;ProductName2;20
-IdProduct3;ProductName3;30
-IdProduct4;ProductName4;40
-IdProduct5;ProductName5;50
-IdProduct6;ProductName6;60
-IdProduct7;ProductName7;70
-IdProduct8;ProductName8;80
-IdProduct9;ProductName9;90
-IdProduct10;ProductName10;100
-IdProduct11;ProductName11;110
-IdProduct12;ProductName12;120
-IdProduct13;ProductName13;130
-IdProduct14;ProductName14;140
-IdProduct15;ProductName15;150
-IdProduct16;ProductName16;160
-IdProduct17;ProductName17;170
-IdProduct18;ProductName18;180
-IdProduct19;ProductName19;190
-IdProduct20;ProductName20;200
+ID2000;Toyota Corolla;20000
+ID2001;Honda Civic;22000
+ID2002;Ford Focus;21000
+ID2003;Chevrolet Malibu;23000
+ID2004;Nissan Sentra;19500
+ID2005;Hyundai Elantra;18000
+ID2006;Volkswagen Jetta;25000
+ID2007;Mazda 3;24000
+ID2008;Subaru Impreza;22500
+ID2009;Kia Forte;19000

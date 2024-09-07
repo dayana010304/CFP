@@ -1,4 +1,4 @@
-package Prueba;
+package Proyecto;
 
 import java.io.*;
 import java.util.*;

@@ -1,40 +1,30 @@
-Type;1000
-Producto1;6
-Producto2;7
-Producto3;6
-Type;1000
-Producto1;6
-Producto2;7
-Producto3;7
-Type;1000
-Producto1;5
-Producto2;9
-Producto3;1
-Type;1000
-Producto1;8
-Producto2;5
-Producto3;10
-Type;1000
-Producto1;6
-Producto2;6
-Producto3;5
-Type;1000
-Producto1;3
-Producto2;5
-Producto3;6
-Type;1000
-Producto1;7
-Producto2;9
-Producto3;5
-Type;1000
-Producto1;6
-Producto2;1
-Producto3;9
-Type;1000
-Producto1;1
-Producto2;7
-Producto3;1
-Type;1000
-Producto1;4
-Producto2;1
-Producto3;5
+CC;1000
+Producto1;ID2004;Nissan Sentra;19500;
+Producto2;ID2003;Chevrolet Malibu;23000;
+CC;1000
+Producto1;ID2003;Chevrolet Malibu;23000;
+Producto2;ID2005;Hyundai Elantra;18000;
+CC;1000
+Producto1;ID2007;Mazda 3;24000;
+Producto2;ID2004;Nissan Sentra;19500;
+CC;1000
+Producto1;ID2002;Ford Focus;21000;
+Producto2;ID2007;Mazda 3;24000;
+CC;1000
+Producto1;ID2004;Nissan Sentra;19500;
+Producto2;ID2007;Mazda 3;24000;
+CC;1000
+Producto1;ID2007;Mazda 3;24000;
+Producto2;ID2005;Hyundai Elantra;18000;
+CC;1000
+Producto1;ID2002;Ford Focus;21000;
+Producto2;ID2008;Subaru Impreza;22500;
+CC;1000
+Producto1;ID2009;Kia Forte;19000;
+Producto2;ID2001;Honda Civic;22000;
+CC;1000
+Producto1;ID2009;Kia Forte;19000;
+Producto2;ID2001;Honda Civic;22000;
+CC;1000
+Producto1;ID2008;Subaru Impreza;22500;
+Producto2;ID2007;Mazda 3;24000;

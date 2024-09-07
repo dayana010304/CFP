@@ -1,10 +1,10 @@
-Type;1001;Juan Taborda
-Type;1002;Tomas Smith
-Type;1003;Juan Torres
-Type;1004;Tomas Taborda
-Type;1005;Tomas Smith
-Type;1006;Tomas Taborda
-Type;1007;Juan Torres
-Type;1008;Juan Torres
-Type;1009;Tomas Torres
-Type;1010;Tomas Smith
+CC;1000;Sofia ; Rodriguez
+CC;1001;Andrea ; Flores
+CC;1002;Jorge ; Gomez
+CC;1003;Valentina ; Sanchez
+CC;1004;Ana ; Castro
+CC;1005;Carolina ; Flores
+CC;1006;Maria ; Cruz
+CC;1007;Pedro ; Gomez
+CC;1008;Sofia ; Ramirez
+CC;1009;Sofia ; Castro
