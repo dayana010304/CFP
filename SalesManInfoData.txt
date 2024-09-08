@@ -1,10 +1,5 @@
-CC;1000;Raul ; Flores
-CC;1001;Carlos ; Sanchez
-CC;1002;Ana ; Rivera
-CC;1003;Isabella ; Gonzalez
-CC;1004;Raul ; Morales
-CC;1005;Carlos ; Gomez
-CC;1006;Sofia ; Rivera
-CC;1007;Luis ; Garcia
-CC;1008;Sofia ; Ortiz
-CC;1009;Luis ; Morales
+CC;76148503;Carlos Andres;Garcia Rodriguez;
+CC;116495870;Laura Andrea;Martinez Hernandez;
+CC;72148503;Raul Luis;Gonzalez Perez;
+CC;8645893;Maria Sofia;Sanchez Ramirez;
+CC;72689436;Pedro jose;Torres Flores;
