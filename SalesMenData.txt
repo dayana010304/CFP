@@ -1,30 +1,30 @@
-CC;1000
-Producto1;ID2004;Nissan Sentra;19500;
-Producto2;ID2003;Chevrolet Malibu;23000;
-CC;1000
-Producto1;ID2003;Chevrolet Malibu;23000;
-Producto2;ID2005;Hyundai Elantra;18000;
-CC;1000
-Producto1;ID2007;Mazda 3;24000;
-Producto2;ID2004;Nissan Sentra;19500;
-CC;1000
-Producto1;ID2002;Ford Focus;21000;
-Producto2;ID2007;Mazda 3;24000;
-CC;1000
-Producto1;ID2004;Nissan Sentra;19500;
-Producto2;ID2007;Mazda 3;24000;
-CC;1000
-Producto1;ID2007;Mazda 3;24000;
-Producto2;ID2005;Hyundai Elantra;18000;
-CC;1000
-Producto1;ID2002;Ford Focus;21000;
-Producto2;ID2008;Subaru Impreza;22500;
-CC;1000
-Producto1;ID2009;Kia Forte;19000;
-Producto2;ID2001;Honda Civic;22000;
-CC;1000
-Producto1;ID2009;Kia Forte;19000;
-Producto2;ID2001;Honda Civic;22000;
-CC;1000
+CC;1006
 Producto1;ID2008;Subaru Impreza;22500;
 Producto2;ID2007;Mazda 3;24000;
+CC;1004
+Producto1;ID2002;Ford Focus;21000;
+Producto2;ID2008;Subaru Impreza;22500;
+CC;1004
+Producto1;ID2009;Kia Forte;19000;
+Producto2;ID2006;Volkswagen Jetta;25000;
+CC;1009
+Producto1;ID2008;Subaru Impreza;22500;
+Producto2;ID2000;Toyota Corolla;20000;
+CC;1009
+Producto1;ID2000;Toyota Corolla;20000;
+Producto2;ID2009;Kia Forte;19000;
+CC;1003
+Producto1;ID2003;Chevrolet Malibu;23000;
+Producto2;ID2001;Honda Civic;22000;
+CC;1003
+Producto1;ID2006;Volkswagen Jetta;25000;
+Producto2;ID2009;Kia Forte;19000;
+CC;1001
+Producto1;ID2004;Nissan Sentra;19500;
+Producto2;ID2002;Ford Focus;21000;
+CC;1001
+Producto1;ID2002;Ford Focus;21000;
+Producto2;ID2008;Subaru Impreza;22500;
+CC;1003
+Producto1;ID2006;Volkswagen Jetta;25000;
+Producto2;ID2004;Nissan Sentra;19500;

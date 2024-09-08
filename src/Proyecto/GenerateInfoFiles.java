@@ -8,34 +8,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+//class to generate files
 public class GenerateInfoFiles {
 
+	//Main method, entry point of the program
     public static void main(String[] args) {
         try {
             createProductsFile(10, "ProductsData");
             createSalesManInfoFile(10, "SalesManInfoData");
             createSalesMenFile(10, "SalesMenData");
             
-            System.out.println("Archivos generados con éxito.");
+            //Printing success message when files are generated successfully
+            System.out.println("Files generated successfully.");
         } catch (IOException e) {
-            System.err.println("Error al generar los archivos: " + e.getMessage());
+        	//Catching and printing error message if any exception occurs during file generation
+            System.err.println("Error generating files: " + e.getMessage());
         }
     }
 
-    public static Integer obtenerCCAleatorio() {
+    public static Integer getCCRandom() {
         String filePath = "SalesManInfoData.txt";
         List<Integer> ccList = new ArrayList<>();
 
-        // Leer el archivo y almacenar los CC en una lista
+        // Read the file and store the CCs in a list
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = br.readLine()) != null) {
-                // Dividir la línea por el carácter ';' y obtener el CC
+            	// Divide the line by the ';' character and get the CC
                 String[] parts = line.split(";");
                 if (parts.length > 1) {
                     try {
-                        int cc = Integer.parseInt(parts[1].trim()); // Convertir el CC a entero
-                        ccList.add(cc); // Agregar el CC a la lista
+                        int cc = Integer.parseInt(parts[1].trim()); // Convert CC to integer
+                        ccList.add(cc); // Add the CC to the list
                     } catch (NumberFormatException e) {
                         System.err.println("Formato de CC inválido en la línea: " + line);
                     }
@@ -43,24 +47,25 @@ public class GenerateInfoFiles {
             }
         } catch (IOException e) {
             System.err.println("Error al leer el archivo: " + e.getMessage());
-            return 1000; // Retornar 1000 en caso de error
+            return 1000; // Return 1000 in case of error
         }
 
-        // Generar un CC aleatorio de la lista
+        // Generate a random CC from the list
         if (!ccList.isEmpty()) {
             Random random = new Random();
             return ccList.get(random.nextInt(ccList.size()));
         }
 
-        return 1000; // Retornar 1000 si no se encontraron CC en la lista
+        return 1000; // Return 1000 if no CCs were found in the list
     }
-
-    private static void createSalesMenFile(int salesCount, String fileName) throws IOException {
+    
+    //Method to create salesmen data file
+    private static void createSalesMenFile(int randomSalesCount, String fileName) throws IOException {
         try (FileWriter writer = new FileWriter(fileName + ".txt")) {
             Random random = new Random();
-            for (int i = 0; i < salesCount; i++) {
+            for (int i = 0; i < randomSalesCount; i++) {
                 // int randomId = 1000 + random.nextInt(10);
-                int randomId = obtenerCCAleatorio();
+                int randomId = getCCRandom();
                 // int id = 1000 + i;
                 writer.write("CC;" + randomId + "\n");
                 for (int j = 1; j <= 2; j++) {
