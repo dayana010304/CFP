@@ -2,7 +2,6 @@ package Proyecto;
 
 import java.io.*;
 import java.util.*;
-import java.io.IOException;
 
 public class Main {
 	
@@ -25,7 +24,8 @@ public class Main {
 				String salesmanId = parts[1];
 				int totalSales = salesData.getOrDefault(salesmanId, 0);
 				for (int i = 2; i < parts.length; i += 2) {
-					totalSales += Integer.parseInt(parts[i])* Integer.parseInt(parts[i + 1]);
+					System.out.println("parts: " + parts[i] + " " + parts[i + 1]);
+					totalSales += Integer.parseInt(parts[i + 1]);
 				}
 				salesData.put(salesmanId, totalSales);
 			}
@@ -64,8 +64,8 @@ public class Main {
 					String [] parts = line.split(";");
 					if (parts[1].equals(salesmanId)) {
 						for (int i = 2; i < parts.length; i += 2) {
-							String productId = parts [i];
-							int quantity = Integer.parseInt(parts[i + i]);
+							String productId = parts[i];
+							System.out.println("productId: " + parts[i]);
 							int totalQuantity = productSales.getOrDefault(productId, 0);
 							productSales.put(productId, totalQuantity + totalQuantity );
 						}
@@ -77,9 +77,12 @@ public class Main {
 		List<Map.Entry<String, Integer>> sortedProductSales = new ArrayList<>(productSales.entrySet());
 		sortedProductSales.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));         
 		try (PrintWriter writer = new PrintWriter(new FileWriter("ProductSales.csv"))) {             
-			for (Map.Entry<String, Integer> entry : sortedProductSales) {                 
-				writer.println(productInfo.get(entry.getKey()) + ";" + entry.getValue()* 
-						Integer.parseInt(productInfo.get(entry.getKey()).split(";")[2]));
+			for (Map.Entry<String, Integer> entry : sortedProductSales) {
+				if (productInfo.containsKey(entry.getKey()))
+				{
+					writer.println(productInfo.get(entry.getKey()) + ";" + entry.getValue()* 
+							Integer.parseInt(productInfo.get(entry.getKey()).split(";")[2]));
+				}                 
 			}
 		}
 	}	
