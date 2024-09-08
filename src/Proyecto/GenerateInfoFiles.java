@@ -75,7 +75,8 @@ public class GenerateInfoFiles {
             }
         }
     }
-
+    
+    //Method to create products data file
     private static void createProductsFile(int productCount, String fileName) throws IOException {
         try (FileWriter writer = new FileWriter(fileName + ".txt")) {
             for (int i = 0; i < productCount; i++) {
@@ -85,6 +86,7 @@ public class GenerateInfoFiles {
         }
     }
 
+    // Method to create salesmen info data file
     private static void createSalesManInfoFile(int salesManCount, String fileName) throws IOException {
         try (FileWriter writer = new FileWriter(fileName + ".txt")) {
             for (int i = 0; i < salesManCount; i++) {
