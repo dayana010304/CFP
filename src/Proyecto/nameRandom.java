@@ -38,7 +38,6 @@ public class nameRandom {
                 {"IDP2093", "Volkswagen Jetta", "25000"},
                 {"IDP2107", "Mazda 3", "24000"},
                 {"IDP2118", "Subaru Impreza", "22500"},
-                {"IDP2139", "Kia Forte", "19000"}
             };
 
 	    
@@ -68,7 +67,7 @@ public class nameRandom {
 	    	String idSeller= "";
 	    	String idProducto = "";
 	    	idSeller = idEmpleado(i);
-    		idProducto= products[p][0]+";";
+    		idProducto= products[p][0]+"";
     		Random random = new Random();
     		int cantVenta = random.nextInt(20);
     		productSelled = idSeller + idProducto + ";"+ cantVenta + ";";

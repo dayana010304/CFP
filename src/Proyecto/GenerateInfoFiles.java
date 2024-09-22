@@ -14,9 +14,9 @@ public class GenerateInfoFiles {
 	// Main method, entry point of the program
 	public static void main(String[] args) {
 		try {
-			createProductsFile(9, "ProductsData");
+			createProductsFile(8, "ProductsData");
 			createSalesManInfoFile(4, "SalesManInfoData");
-			createSalesMenFile(8, "SalesMenData");
+			createSalesMenFile(4, "SalesMenData");
 
 			// Printing success message when files are generated successfully
 			// System.out.println("Files generated successfully.");

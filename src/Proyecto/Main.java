@@ -1,91 +1,207 @@
 package Proyecto;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
-	
-	public static void main (String[] args) {
-		try {
-			processSalesData("SalesMenData.txt", "SalesManInfoData.txt", "ProductsData.txt");
-			System.out.println("Archivos creados con exito");
-		}catch (IOException e) {
-			System.err.println("Error al procesar los datos: " + e.getMessage());
-		}
-	}
 
-	public static void processSalesData(String salesFile, String salesManInfoFile, String productsFile) throws IOException {
-		Map<String, Integer> salesData = new HashMap<>();
-		Map<String, Integer> productSales = new HashMap<>();
-		try (BufferedReader reader = new BufferedReader(new FileReader(salesFile))){
-			String line;
-			while ((line = reader.readLine()) != null) {
-				String [] parts = line.split(";");
-				String salesmanId = parts[1];
-				int totalSales = salesData.getOrDefault(salesmanId, 0);
-				for (int i = 2; i < parts.length; i += 2) {
-					System.out.println("parts: " + parts[i] + " " + parts[i + 1]);
-					totalSales += Integer.parseInt(parts[i + 1]);
-				}
-				salesData.put(salesmanId, totalSales);
-			}
-		}
-		
-		Map<String, String> salesmanInfo = new HashMap<>();
-		try (BufferedReader reader = new BufferedReader(new FileReader(salesManInfoFile))) {
-			String line;             
-			while ((line = reader.readLine()) != null) {
-				String[] parts = line.split(";");
-				salesmanInfo.put(parts[1], parts[2]);
-			}
-		}
-		
-		Map<String, String> productInfo = new HashMap<>();
-		try (BufferedReader reader = new BufferedReader(new FileReader(productsFile))){
-			String line;
-			while ((line = reader.readLine()) != null) {
-				String[] parts = line.split(";");
-				productInfo.put(parts[0], parts[1]);
-			}
-		}
-		List<Map.Entry<String, Integer>> sortedSalesData = new ArrayList<>(salesData.entrySet());
-		sortedSalesData.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
-		
-		try (PrintWriter writer = new PrintWriter (new FileWriter("SalesReport.csv"))){
-			for (Map.Entry<String, Integer> entry : sortedSalesData) {
-				writer.println(salesmanInfo.get(entry.getKey()) + ";" + entry.getValue());
-			}
-		}
-		
-		for (String salesmanId : salesData.keySet()) {
-			try (BufferedReader reader = new BufferedReader(new FileReader(salesFile))){
-				String line;
-				while ((line = reader.readLine()) != null) {
-					String [] parts = line.split(";");
-					if (parts[1].equals(salesmanId)) {
-						for (int i = 2; i < parts.length; i += 2) {
-							String productId = parts[i];
-							System.out.println("productId: " + parts[i]);
-							int totalQuantity = productSales.getOrDefault(productId, 0);
-							productSales.put(productId, totalQuantity + totalQuantity );
-						}
-					}
-				}
-			}
-		}
-		// Sort and write product sales         
-		List<Map.Entry<String, Integer>> sortedProductSales = new ArrayList<>(productSales.entrySet());
-		sortedProductSales.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));         
-		try (PrintWriter writer = new PrintWriter(new FileWriter("ProductSales.csv"))) {             
-			for (Map.Entry<String, Integer> entry : sortedProductSales) {
-				if (productInfo.containsKey(entry.getKey()))
-				{
-					writer.println(productInfo.get(entry.getKey()) + ";" + entry.getValue()* 
-							Integer.parseInt(productInfo.get(entry.getKey()).split(";")[2]));
-				}                 
-			}
-		}
-	}	
+    public static void main(String[] args) {
+        try {
+            List<Product> products = readProducts("ProductsData.txt");
+            List<Seller> sellers = readSalesSellers("SalesMenData.txt", products);
+            sellers.sort((s1, s2) -> Double.compare(s2.getTotalSales(), s1.getTotalSales()));
+            generateSellerReport(sellers, "SalesReport.csv");
+            generateProductReport(products, "ProductReport.csv");
+
+        } catch (IOException e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+    }
+
+    public static List<Seller> readSalesSellers(String fileName, List<Product> products) throws IOException {
+        List<Seller> sellers = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(";");
+                if (data.length == 4) {
+                    String documentType = data[0];
+                    String documentNumber = data[1];
+                    String productId = data[2];
+                    String quantityStr = data[3].trim().replace(",", ".");
+                    if (!quantityStr.isEmpty()) {
+                        try {
+                            int quantity = Integer.parseInt(quantityStr);
+                            Seller seller = findOrCreateSeller(sellers, documentType, documentNumber);
+                            double saleAmount = getSaleAmountById(products, productId) * quantity;
+                            seller.incrementTotalSales(saleAmount);
+                            seller.incrementTotalQuantity(quantity);
+                            incrementProductSoldQuantity(products, productId, quantity);
+                        } catch (NumberFormatException e) {
+                            System.err.println("Error parsing quantity in line: " + line);
+                        }
+                    } else {
+                        System.err.println("Empty quantity for seller: " + documentNumber);
+                    }
+                } else {
+                    System.err.println("Malformed or incomplete line: " + line);
+                }
+            }
+        }
+        return sellers;
+    }
+
+    private static double getSaleAmountById(List<Product> products, String productId) {
+        for (Product product : products) {
+            if (product.getId().equals(productId)) {
+                return product.getPrice();
+            }
+        }
+        return 0; // Return 0 if product not found
+    }
+
+    private static void incrementProductSoldQuantity(List<Product> products, String productId, int quantity) {
+        for (Product product : products) {
+            if (product.getId().equals(productId)) {
+                product.incrementSoldQuantity(quantity);
+                break;
+            }
+        }
+    }
+
+    private static Seller findOrCreateSeller(List<Seller> sellers, String documentType, String documentNumber) {
+        for (Seller seller : sellers) {
+            if (seller.getDocumentType().equals(documentType) && seller.getDocumentNumber().equals(documentNumber)) {
+                return seller;
+            }
+        }
+        Seller newSeller = new Seller(documentType, documentNumber);
+        sellers.add(newSeller);
+        return newSeller;
+    }
+
+    public static List<Product> readProducts(String fileName) throws IOException {
+        List<Product> products = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (!line.trim().isEmpty()) {
+                    String[] data = line.split(";");
+                    if (data.length == 3 && !data[2].trim().isEmpty()) {
+                        try {
+                            String id = data[0].trim();
+                            String name = data[1].trim();
+                            double price = Double.parseDouble(data[2].trim().replace(",", "."));
+                            products.add(new Product(id, name, price));
+                        } catch (NumberFormatException e) {
+                            System.err.println("Error parsing price in line: " + line);
+                        }
+                    } else {
+                        System.err.println("Malformed or incomplete line: " + line);
+                    }
+                }
+            }
+        }
+        return products;
+    }
+
+    public static void generateSellerReport(List<Seller> sellers, String fileName) throws IOException {
+        try (FileWriter writer = new FileWriter(fileName)) {
+            for (Seller seller : sellers) {
+                writer.write(seller.getDocumentNumber() + ";" + seller.getTotalQuantity() + ";" + seller.getTotalSales() + "\n");
+            }
+            System.out.println("Seller report generated: " + fileName);
+        } catch (IOException e) {
+            System.err.println("Error generating seller report: " + e.getMessage());
+        }
+    }
+
+    public static void generateProductReport(List<Product> products, String fileName) throws IOException {
+        try (FileWriter writer = new FileWriter(fileName)) {
+            for (Product product : products) {
+                writer.write(product.getName() + ";" + product.getSoldQuantity() + "\n");
+            }
+            System.out.println("Product report generated: " + fileName);
+        } catch (IOException e) {
+            System.err.println("Error generating product report: " + e.getMessage());
+        }
+    }
+
+    // Seller Class
+    static class Seller {
+        private String documentType;
+        private String documentNumber;
+        private double totalSales;
+        private int totalQuantity;
+
+        public Seller(String documentType, String documentNumber) {
+            this.documentType = documentType;
+            this.documentNumber = documentNumber;
+            this.totalSales = 0;
+            this.totalQuantity = 0;
+        }
+
+        public String getDocumentType() {
+            return documentType;
+        }
+
+        public String getDocumentNumber() {
+            return documentNumber;
+        }
+
+        public double getTotalSales() {
+            return totalSales;
+        }
+
+        public int getTotalQuantity() {
+            return totalQuantity;
+        }
+
+        public void incrementTotalSales(double amount) {
+            this.totalSales += amount; // Add the monetary amount
+        }
+
+        public void incrementTotalQuantity(int quantity) {
+            this.totalQuantity += quantity; // Add the quantity sold
+        }
+    }
+
+    // Product Class
+    static class Product {
+        private String id;
+        private String name;
+        private double price;
+        private int soldQuantity;
+
+        public Product(String id, String name, double price) {
+            this.id = id;
+            this.name = name;
+            this.price = price;
+            this.soldQuantity = 0;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public double getPrice() {
+            return price;
+        }
+
+        public int getSoldQuantity() {
+            return soldQuantity;
+        }
+
+        public void incrementSoldQuantity(int quantity) {
+            this.soldQuantity += quantity;
+        }
+    }
 }
-
-

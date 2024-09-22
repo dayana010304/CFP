@@ -6,4 +6,3 @@ IDP2066;Nissan Sentra;19500;
 IDP2078;Hyundai Elantra;18000;
 IDP2093;Volkswagen Jetta;25000;
 IDP2107;Mazda 3;24000;
-IDP2118;Subaru Impreza;22500;
