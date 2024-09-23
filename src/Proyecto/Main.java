@@ -33,11 +33,28 @@ public class Main {
                     String documentNumber = data[1];
                     String productId = data[2];
                     String quantityStr = data[3].trim().replace(",", ".");
+                    
+                    // Sugerencia 1: Validar que el producto existe antes de continuar
+                    if (getSaleAmountById(products, productId) == 0) {
+                        System.err.println("Producto no encontrado: " + productId);
+                        continue; // Saltar esta línea si el producto no existe
+                    }
+                    
                     if (!quantityStr.isEmpty()) {
                         try {
                             int quantity = Integer.parseInt(quantityStr);
+                            // Agrega validacion de valores negativos
+                            if (quantity < 0) {
+                                System.err.println("Negative quantity found for product ID: " + productId);
+                                continue;  // Saltar la línea si la cantidad es negativa
+                            }
                             Seller seller = findOrCreateSeller(sellers, documentType, documentNumber);
                             double saleAmount = getSaleAmountById(products, productId) * quantity;
+                            // Agrega validacion de valores negativos
+                            if (saleAmount < 0) {
+                                System.err.println("Negative price for product ID: " + productId);
+                                continue;  // Saltar la línea si el precio es negativo
+                            }
                             seller.incrementTotalSales(saleAmount);
                             seller.incrementTotalQuantity(quantity);
                             incrementProductSoldQuantity(products, productId, quantity);
@@ -61,14 +78,16 @@ public class Main {
                 return product.getPrice();
             }
         }
-        return 0; // Return 0 if product not found
+        // Sugerencia 2: Imprimir un mensaje si el producto no es encontrado
+        System.err.println("Product with ID " + productId + " not found");
+        return 0;
     }
 
     private static void incrementProductSoldQuantity(List<Product> products, String productId, int quantity) {
         for (Product product : products) {
             if (product.getId().equals(productId)) {
                 product.incrementSoldQuantity(quantity);
-                break;
+                return; // Sugerencia 3: Usar `return` en lugar de `break` para salir directamente del método
             }
         }
     }
@@ -110,6 +129,8 @@ public class Main {
     }
 
     public static void generateSellerReport(List<Seller> sellers, String fileName) throws IOException {
+        // Sugerencia 4: Se puede usar BufferedWriter para mejorar el rendimiento al escribir archivos grandes.
+    	// try (BufferedWriter writer = new FileWriter(fileName)) {
         try (FileWriter writer = new FileWriter(fileName)) {
             for (Seller seller : sellers) {
                 writer.write(seller.getDocumentNumber() + ";" + seller.getTotalQuantity() + ";" + seller.getTotalSales() + "\n");
