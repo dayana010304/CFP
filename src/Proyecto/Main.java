@@ -7,21 +7,28 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+// Main class that handles reading product and seller data, and generating sales reports.
 public class Main {
 
     public static void main(String[] args) {
         try {
+            // Read the list of products from a file
             List<Product> products = readProducts("ProductsData.txt");
+            // Read the list of sellers and their sales from a file
             List<Seller> sellers = readSalesSellers("SalesMenData.txt", products);
+            // Sort sellers by total sales in descending order
             sellers.sort((s1, s2) -> Double.compare(s2.getTotalSales(), s1.getTotalSales()));
+            // Generate a sales report for sellers
             generateSellerReport(sellers, "SalesReport.csv");
+            // Generate a product sold report
             generateProductReport(products, "ProductReport.csv");
 
         } catch (IOException e) {
+            // Handle errors in case of I/O problems
             System.err.println("Error: " + e.getMessage());
         }
     }
-
+    // Reads the data of the salesmen and their sales from the file 
     public static List<Seller> readSalesSellers(String fileName, List<Product> products) throws IOException {
         List<Seller> sellers = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
@@ -33,28 +40,11 @@ public class Main {
                     String documentNumber = data[1];
                     String productId = data[2];
                     String quantityStr = data[3].trim().replace(",", ".");
-                    
-                    // Sugerencia 1: Validar que el producto existe antes de continuar
-                    if (getSaleAmountById(products, productId) == 0) {
-                        System.err.println("Producto no encontrado: " + productId);
-                        continue; // Saltar esta línea si el producto no existe
-                    }
-                    
                     if (!quantityStr.isEmpty()) {
                         try {
                             int quantity = Integer.parseInt(quantityStr);
-                            // Agrega validacion de valores negativos
-                            if (quantity < 0) {
-                                System.err.println("Negative quantity found for product ID: " + productId);
-                                continue;  // Saltar la línea si la cantidad es negativa
-                            }
                             Seller seller = findOrCreateSeller(sellers, documentType, documentNumber);
                             double saleAmount = getSaleAmountById(products, productId) * quantity;
-                            // Agrega validacion de valores negativos
-                            if (saleAmount < 0) {
-                                System.err.println("Negative price for product ID: " + productId);
-                                continue;  // Saltar la línea si el precio es negativo
-                            }
                             seller.incrementTotalSales(saleAmount);
                             seller.incrementTotalQuantity(quantity);
                             incrementProductSoldQuantity(products, productId, quantity);
@@ -72,26 +62,27 @@ public class Main {
         return sellers;
     }
 
+    // The price of a product is obtained from the product ID.
     private static double getSaleAmountById(List<Product> products, String productId) {
         for (Product product : products) {
             if (product.getId().equals(productId)) {
                 return product.getPrice();
             }
         }
-        // Sugerencia 2: Imprimir un mensaje si el producto no es encontrado
-        System.err.println("Product with ID " + productId + " not found");
-        return 0;
+        return 0; // Return 0 if the product is not found
     }
-
+    
+    // Increase in the quantity of products sold
     private static void incrementProductSoldQuantity(List<Product> products, String productId, int quantity) {
         for (Product product : products) {
             if (product.getId().equals(productId)) {
                 product.incrementSoldQuantity(quantity);
-                return; // Sugerencia 3: Usar `return` en lugar de `break` para salir directamente del método
+                break;
             }
         }
     }
 
+    // The seller is searched for in the list
     private static Seller findOrCreateSeller(List<Seller> sellers, String documentType, String documentNumber) {
         for (Seller seller : sellers) {
             if (seller.getDocumentType().equals(documentType) && seller.getDocumentNumber().equals(documentNumber)) {
@@ -103,6 +94,7 @@ public class Main {
         return newSeller;
     }
 
+    // Lee los datos de productos desde el archivo
     public static List<Product> readProducts(String fileName) throws IOException {
         List<Product> products = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
@@ -128,9 +120,8 @@ public class Main {
         return products;
     }
 
+    //Generates the sales report of the salesmen and saves the information in the SelesReport.csv file.
     public static void generateSellerReport(List<Seller> sellers, String fileName) throws IOException {
-        // Sugerencia 4: Se puede usar BufferedWriter para mejorar el rendimiento al escribir archivos grandes.
-    	// try (BufferedWriter writer = new FileWriter(fileName)) {
         try (FileWriter writer = new FileWriter(fileName)) {
             for (Seller seller : sellers) {
                 writer.write(seller.getDocumentNumber() + ";" + seller.getTotalQuantity() + ";" + seller.getTotalSales() + "\n");
@@ -141,6 +132,7 @@ public class Main {
         }
     }
 
+    // Generates report of products sold and saves the information in the ProductReport.csv file.
     public static void generateProductReport(List<Product> products, String fileName) throws IOException {
         try (FileWriter writer = new FileWriter(fileName)) {
             for (Product product : products) {
@@ -152,7 +144,7 @@ public class Main {
         }
     }
 
-    // Seller Class
+    // Class representing a seller with their document type, document number, total sales, and total quantity sold.
     static class Seller {
         private String documentType;
         private String documentNumber;
@@ -183,15 +175,15 @@ public class Main {
         }
 
         public void incrementTotalSales(double amount) {
-            this.totalSales += amount; // Add the monetary amount
+            this.totalSales += amount; // Add the sale amount
         }
 
         public void incrementTotalQuantity(int quantity) {
-            this.totalQuantity += quantity; // Add the quantity sold
+            this.totalQuantity += quantity; // Add the sold quantity
         }
     }
 
-    // Product Class
+    // Class representing a product with its ID, name, price, and sold quantity.
     static class Product {
         private String id;
         private String name;
@@ -222,7 +214,7 @@ public class Main {
         }
 
         public void incrementSoldQuantity(int quantity) {
-            this.soldQuantity += quantity;
+            this.soldQuantity += quantity; // Increment sold
         }
     }
 }

@@ -92,7 +92,7 @@ public class GenerateInfoFiles {
 		String dates = "";
 		if (cantPro < values) {
 			try (FileWriter writer = new FileWriter(fileName + ".txt")) {
-				for (int i = 0; i < cantPro; i++) {
+				for (int i = 0; i <= cantPro; i++) {
 					dates = nameRandom.generateRandomProducts(i);
 					writer.write(dates + "\n");
 				}
