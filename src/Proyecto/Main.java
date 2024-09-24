@@ -94,7 +94,7 @@ public class Main {
         return newSeller;
     }
 
-    // Lee los datos de productos desde el archivo
+    // Reads product data from the file
     public static List<Product> readProducts(String fileName) throws IOException {
         List<Product> products = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
@@ -119,7 +119,6 @@ public class Main {
         }
         return products;
     }
-
     //Generates the sales report of the salesmen and saves the information in the SelesReport.csv file.
     public static void generateSellerReport(List<Seller> sellers, String fileName) throws IOException {
         try (FileWriter writer = new FileWriter(fileName)) {
