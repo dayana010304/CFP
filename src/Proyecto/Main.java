@@ -40,11 +40,28 @@ public class Main {
                     String documentNumber = data[1];
                     String productId = data[2];
                     String quantityStr = data[3].trim().replace(",", ".");
+                    
+                    // Validation 1: Validate that the product exists before proceeding.
+                    if (getSaleAmountById(products, productId) == 0) {
+                        System.err.println("Product not found: " + productId);
+                        continue; // Skip this line if the product does not exist
+                    }
+                    
                     if (!quantityStr.isEmpty()) {
                         try {
                             int quantity = Integer.parseInt(quantityStr);
+                            // Validation 2: is validated if there are negative values.
+                            if (quantity < 0) {
+                                System.err.println("Negative quantity found for product ID: " + productId);
+                                continue;  // Skip the line if the amount is negative
+                            }
                             Seller seller = findOrCreateSeller(sellers, documentType, documentNumber);
                             double saleAmount = getSaleAmountById(products, productId) * quantity;
+                            // is validated if there are negative values.
+                            if (saleAmount < 0) {
+                                System.err.println("Negative price for product ID: " + productId);
+                                continue;  // Skip the line if the amount is negative
+                            }
                             seller.incrementTotalSales(saleAmount);
                             seller.incrementTotalQuantity(quantity);
                             incrementProductSoldQuantity(products, productId, quantity);
@@ -69,15 +86,17 @@ public class Main {
                 return product.getPrice();
             }
         }
+        // Validation 3: print a message if the product is not found
+        System.err.println("Product with ID " + productId + " not found");
         return 0; // Return 0 if the product is not found
     }
-    
+
     // Increase in the quantity of products sold
     private static void incrementProductSoldQuantity(List<Product> products, String productId, int quantity) {
         for (Product product : products) {
             if (product.getId().equals(productId)) {
                 product.incrementSoldQuantity(quantity);
-                break;
+                return; // Modification is made: use return instead of break to exit directly from the method.
             }
         }
     }
@@ -119,8 +138,11 @@ public class Main {
         }
         return products;
     }
+
     //Generates the sales report of the salesmen and saves the information in the SelesReport.csv file.
     public static void generateSellerReport(List<Seller> sellers, String fileName) throws IOException {
+        // Modification is made: BufferedWriter can be used to improve performance when writing large files.
+    	// try (BufferedWriter writer = new FileWriter(fileName)) {
         try (FileWriter writer = new FileWriter(fileName)) {
             for (Seller seller : sellers) {
                 writer.write(seller.getDocumentNumber() + ";" + seller.getTotalQuantity() + ";" + seller.getTotalSales() + "\n");
@@ -174,11 +196,11 @@ public class Main {
         }
 
         public void incrementTotalSales(double amount) {
-            this.totalSales += amount; // Add the sale amount
+            this.totalSales += amount; // Add the monetary amount
         }
 
         public void incrementTotalQuantity(int quantity) {
-            this.totalQuantity += quantity; // Add the sold quantity
+            this.totalQuantity += quantity; // Add the quantity sold
         }
     }
 
